@@ -1,6 +1,6 @@
 # Palla Web SDK
 
-Thank you for choosing Palla!
+Thank you for choosing Palla! 💸
 
 ## Getting started
 
@@ -10,9 +10,13 @@ A partner access token is required for every function of the `palla-web-sdk`. Yo
 
 ### Importing the Palla Web SDK
 
+Install the palla-web-sdk using npm:
+
 ```bash
 npm install palla-web-sdk
 ```
+
+Import into your project:
 
 ```js
 import Palla from 'palla-web-sdk';
@@ -36,8 +40,8 @@ window.location.replace(redirectUrl);
 ```
 
 Successful flows will redirect to the success url with card details in the query string:
-```json
-https://www.partner.com/success?paymentMethodId=pmt_01FYFBVRX1PVCKM007FB8CKD3G&country=US&primary=true&type=card&brand=visa&last4=0004&expMonth=02&expYear=2026
+```js
+// https://www.partner.com/success?paymentMethodId=pmt_01FYFBVRX1PVCKM007FB8CKD3G&country=US&primary=true&type=card&brand=visa&last4=0004&expMonth=02&expYear=2026
 {
     "paymentMethodId": "pmt_01FYFBVRX1PVCKM007FB8CKD3G",
     "country": "US",
@@ -51,16 +55,16 @@ https://www.partner.com/success?paymentMethodId=pmt_01FYFBVRX1PVCKM007FB8CKD3G&c
 ```
 
 Failed flows will redirect to the error url with a failed result in the query string:
-```json
-https://www.partner.com/error?status=403&result=failed
+```js
+// https://www.partner.com/error?status=403&result=failed
 {
     "status": "403",
     "result": "failed"
 }
 ```
 User Canceled Flows Redirect to error url with a canceled result in the query string:
-```json
-https://www.partner.com/error?status=499&result=canceled
+```js
+// https://www.partner.com/error?status=499&result=canceled
 {
     "status": "499",
     "result": "canceled"
