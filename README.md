@@ -6,7 +6,7 @@ Thank you for choosing Palla!
 
 ### Access Tokens
 
-A partner access token is required for every function of the `palla-web-sdk`. You will need to generate this in your backend and pass it here into the SDK. To generate the token, please see the [Palla Partner Platform API docs](https://documenter.getpostman.com/view/306637/TzkyP11Z).
+A partner access token is required for every function of the `palla-web-sdk`. You will need to generate this in your backend and pass it here into the SDK. To generate the token, please see the [Palla Partner Platform API docs](https://documenter.getpostman.com/view/306637/TzkyP11Z#4b19f79a-d589-4487-b6e9-f1df88f8ea09).
 
 ### Importing the Palla Web SDK
 
@@ -36,18 +36,22 @@ window.location.replace(redirectUrl);
 ```
 
 Successful flows will redirect to the success url with card details in the query string:
-```js
-https://www.partner.com/success?paymentMethodId=abc123&last4=0066&brand=visa&exp=202405
+```json
+https://www.partner.com/success?paymentMethodId=pmt_01FYFBVRX1PVCKM007FB8CKD3G&country=US&primary=true&type=card&brand=visa&last4=0004&expMonth=02&expYear=2026
 {
-    "paymentMethodId": "abc123",
-    "last4": "0066",
+    "paymentMethodId": "pmt_01FYFBVRX1PVCKM007FB8CKD3G",
+    "country": "US",
+    "primary": "true",
+    "type": "card",
     "brand": "visa",
-    "exp": "202405"
+    "last4": "0004",
+    "expMonth": "02",
+    "expYear": "2026"
 }
 ```
 
 Failed flows will redirect to the error url with a failed result in the query string:
-```js
+```json
 https://www.partner.com/error?status=403&result=failed
 {
     "status": "403",
@@ -55,7 +59,7 @@ https://www.partner.com/error?status=403&result=failed
 }
 ```
 User Canceled Flows Redirect to error url with a canceled result in the query string:
-```js
+```json
 https://www.partner.com/error?status=499&result=canceled
 {
     "status": "499",
