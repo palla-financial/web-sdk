@@ -1,0 +1,19 @@
+{
+  "name": "palla-web-sdk",
+  "version": "0.1.0",
+  "description": "Web SDK for integration with the palla platform.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/palla-financial/palla-sdk.git"
+  },
+  "author": "tom@palla.app",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/palla-financial/palla-sdk/issues"
+  },
+  "homepage": "https://gitlab.com/palla-financial/palla-sdk#readme"
+}
