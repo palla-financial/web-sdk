@@ -10,7 +10,10 @@
     errorUrl,
     accessToken,
   }) {
-    return `${flowUrl}?token=${encodeURIComponent(accessToken)}&success=${encodeURIComponent(successUrl)}&error=${encodeURIComponent(errorUrl)}`;
+    const token = encodeURIComponent(accessToken);
+    const success = encodeURIComponent(successUrl);
+    const error = encodeURIComponent(errorUrl);
+    return flowUrl + '?token=' + token + '&success=' + success + '&error=' + error;
   };
 
   window.Palla = _Palla;
