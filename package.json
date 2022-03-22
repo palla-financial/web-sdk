@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/palla-financial/palla-sdk.git"
+    "url": "https://github.com/palla-financial/web-sdk.git"
   },
-  "author": "tom@palla.app",
+  "author": "engineering@palla.app",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/palla-financial/palla-sdk/issues"
+    "url": "https://github.com/palla-financial/web-sdk/issues"
   },
-  "homepage": "https://gitlab.com/palla-financial/palla-sdk#readme"
+  "homepage": "https://github.com/palla-financial/web-sdk#readme"
 }
