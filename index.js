@@ -15,25 +15,20 @@
   };
 
   const objectToQueryString = obj => Object.entries(obj).map(
-    ([key, val]) => `${key}=${encodeURIComponent(val)}`
+    function ([key, val]) { return `${key}=${encodeURIComponent(val)}`; }
   ).join('&');
 
-  _Palla.createReceiverRedirect = function ({
-    flowUrl,
-    successUrl,
-    errorUrl,
-    accessToken,
-    ...query,
-  }) {
+  _Palla.createReceiverRedirect = function (opts) {
+    const { flowUrl, accessToken, successUrl, errorUrl, ...rest } = opts;
     const url = new URL(flowUrl);
-    return url.origin + '?' + objectToQueryString(
+    return url.origin + url.pathname + '?' + objectToQueryString(
       mergeCallbackQuery(url.search.substring(1), {
-        ...query,
+        ...rest,
         token: accessToken,
         success: successUrl,
         error: errorUrl,
       })
-    );
+    ) + url.hash;
   };
 
   window.Palla = _Palla;
