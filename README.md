@@ -22,17 +22,18 @@ Import into your project:
 import Palla from 'palla-web-sdk';
 ```
 
-## Initiating the redirect flow
+## Receiver Signup Redirect
 Generate your custom receiver signup link using the Palla SDK:
 
 ```js
 const { redirectUrl } = Palla.createReceiverRedirect({
-    flowUrl: 'https://palla.app',
+    flowUrl: 'https://mycompanysignup.palla.app',
     successUrl: 'https://www.partner.com/success',
     errorUrl: 'https://www.partner.com/error',
     accessToken: 'my-jwt-access-token',
 });
 ```
+
 Redirect the client to the generated link:
 
 ```js
@@ -43,6 +44,8 @@ Successful flows will redirect to the success url with card details in the query
 ```js
 // https://www.partner.com/success?paymentMethodId=pmt_01FYFBVRX1PVCKM007FB8CKD3G&country=US&primary=true&type=card&brand=visa&last4=0004&expMonth=02&expYear=2026
 {
+    "status": "200",
+    "result": "success"
     "paymentMethodId": "pmt_01FYFBVRX1PVCKM007FB8CKD3G",
     "country": "US",
     "primary": "true",
