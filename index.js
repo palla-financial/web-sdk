@@ -8,6 +8,7 @@
 
   const mergeCallbackQuery = function (queryString, query) {
     return queryString.split('&').reduce((acc, value) => {
+      if (!value) return acc;
       const [key, val] = value.split('=');
       if (!acc[key]) acc[key] = val;
       return acc;
@@ -21,14 +22,16 @@
   _Palla.createReceiverRedirect = function (opts) {
     const { flowUrl, accessToken, successUrl, errorUrl, ...rest } = opts;
     const url = new URL(flowUrl);
-    return url.origin + url.pathname + '?' + objectToQueryString(
-      mergeCallbackQuery(url.search.substring(1), {
-        ...rest,
-        token: accessToken,
-        success: successUrl,
-        error: errorUrl,
-      })
-    ) + url.hash;
+    return {
+      "redirectUrl": url.origin + url.pathname + '?' + objectToQueryString(
+        mergeCallbackQuery(url.search.substring(1), {
+          ...rest,
+          token: accessToken,
+          success: successUrl,
+          error: errorUrl,
+        })
+      ) + url.hash
+    };
   };
 
   window.Palla = _Palla;
