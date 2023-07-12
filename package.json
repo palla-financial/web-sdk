@@ -1,9 +1,22 @@
 {
   "name": "palla-web-sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Web SDK for integration with the palla platform.",
   "main": "index.js",
+  "type": "module",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
   "scripts": {
+    "rollup": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +28,16 @@
   "bugs": {
     "url": "https://github.com/palla-financial/web-sdk/issues"
   },
-  "homepage": "https://github.com/palla-financial/web-sdk#readme"
+  "homepage": "https://github.com/palla-financial/web-sdk#readme",
+  "dependencies": {
+    "rollup": "^3.26.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.7",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "rollup-plugin-peer-deps-external": "^2.2.4"
+  }
 }
