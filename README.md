@@ -31,6 +31,7 @@ const { redirectUrl } = Palla.createReceiverRedirect({
     errorUrl: 'https://www.partner.com/error?my-session-id=123',
     accessToken: 'my-jwt-access-token',
     personal: true, // collect personal details (date of birth)
+    paymentLink: true, // create and display payment link
 });
 ```
 
