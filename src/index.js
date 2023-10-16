@@ -45,4 +45,17 @@ const createReceiverRedirect = function (opts) {
   };
 };
 
-export default { createReceiverRedirect };
+const createAddPaymentIFrameUrl = function (opts) {
+  const { token, host } = opts;
+  const url = new URL(host);
+  const paymentIFrameUrl = (
+    url.origin +
+    '/e/payments' +
+    '?' +
+    objectToQueryString({ token }) +
+    url.hash
+  );
+  return { paymentIFrameUrl };
+};
+
+export default { createReceiverRedirect, createAddPaymentIFrameUrl };
