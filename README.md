@@ -74,3 +74,99 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
     "result": "canceled"
 }
 ```
+
+## Embedable Payment IFrame
+
+### IFrame Events
+#### Structure
+```
+{
+    id: string,
+    message?: string,
+    payload?: <response data>
+}
+```
+
+#### Types
+- "awaiting-config" => send your config
+```
+{ id: "awaiting-config" }
+```
+- "credential-error" => bad token
+```
+{ 
+    id: "credential-error",
+    message: "credential issue",
+    payload: {
+        status,
+        statusText
+    }
+}
+```
+- "add-payment-error" => failed to add card
+```
+{ 
+    id: "add-payment-error",
+    message: "add card failed",
+    payload: {
+        status,
+        statusText
+    }
+    
+}
+```
+- "add-payment-success" => card added to user
+```
+{ 
+    id: "add-payment-success",
+    message: "add card success",
+    payload: {
+        "status": "200",
+        "paymentMethodId": "pmt_01FYFBVRX1PVCKM007FB8CKD3G",
+        "country": "US",
+        "primary": "true",
+        "type": "card",
+        "brand": "visa",
+        "last4": "0004",
+        "expMonth": "02",
+        "expYear": "2026"
+    }
+}
+```
+
+#### Examples
+##### Browser
+File: `index.js`
+```js
+(function(window, document){
+    const config = {
+        copy: {
+            paymentHeader: "Add Your Copy Here",
+            paymentInfoText: "Add Your Copy Here"
+        },
+        styles: {
+            paymentHeaderColor: "#FF5733"
+        }
+    };
+
+    const { createAddPaymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token });
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("src", addPaymentMethodURL);
+    function _sendMessage(iFrameRef: any, msg: any) {
+        return iframe.contentWindow?.postMessage(msg, "*");
+    };
+    const messageHanlder = function(message) {
+        if ( message.origin === host && message?.data?.id === "awaiting-config" ) {
+            _sendMessage({ id: "config", payload: config });
+        }
+        // add additional handlers here
+    };
+
+    window.addEventListener("message", messageHanlder);
+
+    const cleanUp = window.removeEventListener(messageHandler);
+    // TODO: use selector to append iframe in correct place
+    document.appendChild(iframe);
+
+})(window, document);
+```
