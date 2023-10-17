@@ -138,7 +138,8 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
 ##### Browser
 File: `index.js`
 ```js
-(function(window, document){
+(function( window, document ){
+
     const config = {
         copy: {
             paymentHeader: "Add Your Copy Here",
@@ -149,24 +150,58 @@ File: `index.js`
         }
     };
 
-    const { createAddPaymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token });
+    const { paymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token });
+
     const iframe = document.createElement("iframe");
-    iframe.setAttribute("src", addPaymentMethodURL);
-    function _sendMessage(iFrameRef: any, msg: any) {
-        return iframe.contentWindow?.postMessage(msg, "*");
+
+    iframe.setAttribute("src", paymentIFrameUrl);
+
+    const sendMessage = function _sendMessage(msg: any) {
+
+        return iframe?.contentWindow?.postMessage(msg, "*");
+
     };
-    const messageHanlder = function(message) {
-        if ( message.origin === host && message?.data?.id === "awaiting-config" ) {
-            _sendMessage({ id: "config", payload: config });
+
+    const messageHandler = function _messageHandler(message) {
+
+        if ( message.origin === host ) {
+
+            if ( message?.data?.id === "awaiting-config" ) {
+
+                sendMessage({ id: "config", payload: config });
+
+            } else if ( message?.data?.id === "add-payment-success" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "add-payment-error" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "credential-error" ) {
+
+                // call cleanup
+                cleanUp();
+
+            }
+
         }
-        // add additional handlers here
+
     };
 
-    window.addEventListener("message", messageHanlder);
+    window.addEventListener("message", messageHandler);
 
-    const cleanUp = window.removeEventListener(messageHandler);
-    // TODO: use selector to append iframe in correct place
-    document.appendChild(iframe);
+    document.querySelector("body").appendChild(iframe);
 
-})(window, document);
+    const cleanUp = function _cleanUp() => {
+
+        window.removeEventListener("message", messageHandler);
+
+        iframe.remove();
+
+    };
+
+})( window, document );
 ```
