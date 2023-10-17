@@ -162,7 +162,7 @@ File: `index.js`
 
     };
 
-    const messageHanlder = function _messageHanlder(message) {
+    const messageHandler = function _messageHandler(message) {
 
         if ( message.origin === host ) {
 
@@ -191,7 +191,7 @@ File: `index.js`
 
     };
 
-    window.addEventListener("message", messageHanlder);
+    window.addEventListener("message", messageHandler);
 
     document.querySelector("body").appendChild(iframe);
 
