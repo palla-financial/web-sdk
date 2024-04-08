@@ -150,11 +150,134 @@ File: `index.js`
         }
     };
 
-    const { paymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token });
+    const { paymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token, ...config });
 
     const iframe = document.createElement("iframe");
 
     iframe.setAttribute("src", paymentIFrameUrl);
+
+    const sendMessage = function _sendMessage(msg: any) {
+
+        return iframe?.contentWindow?.postMessage(msg, "*");
+
+    };
+
+    const messageHandler = function _messageHandler(message) {
+
+        if ( message.origin === host ) {
+            // NOTE: config can be passed in the query string
+            if ( message?.data?.id === "awaiting-config" ) {
+
+                sendMessage({ id: "config", payload: config });
+
+            } else if ( message?.data?.id === "add-payment-success" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "add-payment-error" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "credential-error" ) {
+
+                // call cleanup
+                cleanUp();
+
+            }
+
+        }
+
+    };
+
+    window.addEventListener("message", messageHandler);
+
+    document.querySelector("body").appendChild(iframe);
+
+    const cleanUp = function _cleanUp() => {
+
+        window.removeEventListener("message", messageHandler);
+
+        iframe.remove();
+
+    };
+
+})( window, document );
+```
+
+
+## Embedable Identity Verification IFrame
+
+### IFrame Events
+#### Structure
+```
+{
+    id: string,
+    message?: string,
+    payload?: <response data>
+}
+```
+
+#### Types
+- "awaiting-config" => send your config
+```
+{ id: "awaiting-config" }
+```
+- "credential-error" => bad token
+```
+{ 
+    id: "credential-error",
+    message: "credential issue",
+    payload: {
+        status,
+        statusText
+    }
+}
+```
+- "idv-success" => idv successful
+```
+{ 
+    id: "idv-success",
+    message: "idv success",
+    payload: {
+        ...
+    }
+    
+}
+```
+- "idv-fail => idv fail
+```
+{ 
+    id: "idv-fail,
+    message: "idv fail",
+    payload: {
+        ...
+    }
+}
+```
+- "idv-error => idv error
+```
+{ 
+    id: "idv-error,
+    message: "idv error",
+    payload: {
+        ...
+    }
+}
+```
+
+#### Examples
+##### Browser
+File: `index.js`
+```js
+(function( window, document ){
+
+    const { idvIFrameUrl } = Palla.createIDVIFrameUrl({ host, token });
+
+    const iframe = document.createElement("iframe");
+
+    iframe.setAttribute("src", idvIFrameUrl);
 
     const sendMessage = function _sendMessage(msg: any) {
 
@@ -170,12 +293,17 @@ File: `index.js`
 
                 sendMessage({ id: "config", payload: config });
 
-            } else if ( message?.data?.id === "add-payment-success" ) {
+            } else if ( message?.data?.id === "idv-success" ) {
 
                 // call cleanup
                 cleanUp();
 
-            } else if ( message?.data?.id === "add-payment-error" ) {
+            } else if ( message?.data?.id === "idv-fail" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "idv-cancel" ) {
 
                 // call cleanup
                 cleanUp();
