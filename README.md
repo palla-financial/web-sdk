@@ -261,18 +261,75 @@ File: `index.js`
 
 - "idv-fail => idv fail
 ```
-{ 
-    id: "idv-fail,
-    message: "idv fail",
-    payload: {
-        status,
-        statusText,
-        meta: { code, path, requestId, result, requestCountry },
-        error: { message, rc, resource, description },
+{
+    "id": "idv-fail",
+    "message": "idv fail",
+    "payload": {
+        "status": 404,
+        "statusText": "",
+        "meta": {
+            "code": 404,
+            "path": "/v1/accounts",
+            "requestId": "<sessionId>",
+            "result":"failure",
+            "requestCountry":"US"
+        },
+        "error": {
+            "message": "accounts",
+            "rc": 22,
+            "resource": "accounts",
+            "description": "resource/missing"
+        }
     }
 }
 ```
 
+```
+{
+    "id": "idv-fail",
+    "message": "idv fail",
+    "payload": {
+        "status": 409,
+        "statusText": "",
+        "meta": {
+            "code": 409,
+            "path": "/v1/identity/verifications",
+            "requestId": "<sessionId>",
+            "result":"failure",
+            "requestCountry":"US"
+        },
+        "error":{
+            "message": "identity data",
+            "rc": 22,
+            "resource": "identity",
+            "description": "resource/missing"
+        }
+    }
+}
+```
+```
+{
+    "id": "idv-fail",
+    "message": "idv fail",
+    "payload": {
+        "status": 409,
+        "statusText": "",
+        "meta": {
+            "code": 409,
+            "path": "/v1/identity/verifications",
+            "requestId": "<sessionId>",
+            "result":"failure",
+            "requestCountry":"US"
+        },
+        "error":{
+            "message": "phone number",
+            "rc": 22,
+            "resource": "user_identifiers",
+            "description": "resource/missing"
+        }
+    }
+}
+```
 ```
 { 
     id: "idv-fail,
