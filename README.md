@@ -162,14 +162,14 @@ File: `index.js`
 
     const sendMessage = function _sendMessage(msg: any) {
 
-        return iframe?.contentWindow?.postMessage(msg, new URL(paymentIFrameUrl.origin));
+        return iframe?.contentWindow?.postMessage(msg, new URL(paymentIFrameUrl).origin);
 
     };
 
     const messageHandler = function _messageHandler(message) {
 
         if ( message.origin === host ) {
-            // NOTE: config can be passed in the query string
+
             if ( message?.data?.id === "awaiting-config" ) {
 
                 sendMessage({ id: "config", payload: config });
@@ -339,7 +339,7 @@ File: `index.js`
 
     const sendMessage = function _sendMessage(msg: any) {
 
-        return iframe?.contentWindow?.postMessage(msg, new URL(idvIFrameUrl.origin));
+        return iframe?.contentWindow?.postMessage(msg, new URL(idvIFrameUrl).origin);
 
     };
 
