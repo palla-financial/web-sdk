@@ -88,10 +88,12 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
 ```
 
 #### Types
+
 - "awaiting-config" => send your config
 ```
 { id: "awaiting-config" }
 ```
+
 - "credential-error" => bad token
 ```
 { 
@@ -103,6 +105,7 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
     }
 }
 ```
+
 - "add-payment-error" => failed to add card
 ```
 { 
@@ -115,6 +118,7 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
     
 }
 ```
+
 - "add-payment-success" => card added to user
 ```
 { 
@@ -158,7 +162,7 @@ File: `index.js`
 
     const sendMessage = function _sendMessage(msg: any) {
 
-        return iframe?.contentWindow?.postMessage(msg, "*");
+        return iframe?.contentWindow?.postMessage(msg, new URL(paymentIFrameUrl.origin));
 
     };
 
@@ -195,7 +199,7 @@ File: `index.js`
 
     document.querySelector("body").appendChild(iframe);
 
-    const cleanUp = function _cleanUp() => {
+    const cleanUp = function _cleanUp() {
 
         window.removeEventListener("message", messageHandler);
 
@@ -220,10 +224,12 @@ File: `index.js`
 ```
 
 #### Types
+
 - "awaiting-config" => send your config
 ```
 { id: "awaiting-config" }
 ```
+
 - "credential-error" => bad token
 ```
 { 
@@ -235,35 +241,59 @@ File: `index.js`
     }
 }
 ```
+
 - "idv-success" => idv successful
 ```
 { 
     id: "idv-success",
     message: "idv success",
     payload: {
-        ...
+        "verifications": [
+            { "type": "KYC-US", "level": 2, "status": "complete" },
+            { "type": "KYC-US", "level": 1, "status": "complete" }
+        ],
+        "upgrades": [
+            { "type": "KYC-US", "level": 3, "status": "available" }
+        ]
     }
-    
 }
 ```
+
 - "idv-fail => idv fail
 ```
 { 
     id: "idv-fail,
     message: "idv fail",
     payload: {
-        ...
+        status,
+        statusText,
+        meta: { code, path, requestId, result, requestCountry },
+        error: { message, rc, resource, description },
     }
 }
 ```
-- "idv-error => idv error
+
 ```
 { 
-    id: "idv-error,
-    message: "idv error",
+    id: "idv-fail,
+    message: "idv fail",
     payload: {
-        ...
+        verifications: [
+            { "type": "KYC-US", "level": 2, "status": "failed" },
+            { "type": "KYC-US", "level": 1, "status": "complete" }
+        ]
+        upgrades: [
+            { "type": "KYC-US", "level": 3, "status": "available" }
+        ]
     }
+}
+```
+
+- "idv-cancel => idv cancel
+```
+{ 
+    id: "idv-cancel,
+    message: "idv cancel"
 }
 ```
 
@@ -281,7 +311,7 @@ File: `index.js`
 
     const sendMessage = function _sendMessage(msg: any) {
 
-        return iframe?.contentWindow?.postMessage(msg, "*");
+        return iframe?.contentWindow?.postMessage(msg, new URL(idvIFrameUrl.origin));
 
     };
 
@@ -323,7 +353,7 @@ File: `index.js`
 
     document.querySelector("body").appendChild(iframe);
 
-    const cleanUp = function _cleanUp() => {
+    const cleanUp = function _cleanUp() {
 
         window.removeEventListener("message", messageHandler);
 
