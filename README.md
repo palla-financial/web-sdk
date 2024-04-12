@@ -234,11 +234,7 @@ File: `index.js`
 ```
 { 
     id: "credential-error",
-    message: "credential issue",
-    payload: {
-        status,
-        statusText
-    }
+    message: "credential issue"
 }
 ```
 
@@ -265,15 +261,6 @@ File: `index.js`
     "id": "idv-fail",
     "message": "idv fail",
     "payload": {
-        "status": 404,
-        "statusText": "",
-        "meta": {
-            "code": 404,
-            "path": "/v1/accounts",
-            "requestId": "<sessionId>",
-            "result":"failure",
-            "requestCountry":"US"
-        },
         "error": {
             "message": "accounts",
             "rc": 22,
@@ -289,15 +276,6 @@ File: `index.js`
     "id": "idv-fail",
     "message": "idv fail",
     "payload": {
-        "status": 409,
-        "statusText": "",
-        "meta": {
-            "code": 409,
-            "path": "/v1/identity/verifications",
-            "requestId": "<sessionId>",
-            "result":"failure",
-            "requestCountry":"US"
-        },
         "error":{
             "message": "identity data",
             "rc": 22,
@@ -312,15 +290,6 @@ File: `index.js`
     "id": "idv-fail",
     "message": "idv fail",
     "payload": {
-        "status": 409,
-        "statusText": "",
-        "meta": {
-            "code": 409,
-            "path": "/v1/identity/verifications",
-            "requestId": "<sessionId>",
-            "result":"failure",
-            "requestCountry":"US"
-        },
         "error":{
             "message": "phone number",
             "rc": 22,
@@ -335,13 +304,15 @@ File: `index.js`
     id: "idv-fail,
     message: "idv fail",
     payload: {
-        verifications: [
-            { "type": "KYC-US", "level": 2, "status": "failed" },
-            { "type": "KYC-US", "level": 1, "status": "complete" }
-        ]
-        upgrades: [
-            { "type": "KYC-US", "level": 3, "status": "available" }
-        ]
+        error: {
+            verifications: [
+                { "type": "KYC-US", "level": 2, "status": "failed" },
+                { "type": "KYC-US", "level": 1, "status": "complete" }
+            ],
+            upgrades: [
+                { "type": "KYC-US", "level": 3, "status": "available" }
+            ]
+        }
     }
 }
 ```
