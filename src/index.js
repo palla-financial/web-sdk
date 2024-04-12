@@ -21,6 +21,24 @@ const objectToQueryString = (obj) =>
     })
     .join('&');
 
+const flattenKeys = (obj) => Object.assign(
+  {},
+  ...function _flatten(o, prefix = '') {
+    return [].concat(
+      ...Object.keys(o).map(
+        k => {
+          // this doesn't handle array values
+          if (typeof o[k] === 'object') {
+            return _flatten(o[k], `${prefix ? `${prefix}.` : ''}${k}`);
+          } else {
+            return ({ [`${prefix ? `${prefix}.` : ''}${k}`]: o[k] });
+          }
+        }
+      )
+    );
+  }(obj)
+);
+
 const createReceiverRedirect = function (opts) {
   const { flowUrl, accessToken, successUrl, cancelUrl, errorUrl, ...rest } = opts;
   const url = new URL(flowUrl);
@@ -46,16 +64,29 @@ const createReceiverRedirect = function (opts) {
 };
 
 const createAddPaymentIFrameUrl = function (opts) {
-  const { token, host } = opts;
+  const { token, host, ...rest } = opts;
   const url = new URL(host);
   const paymentIFrameUrl = (
     url.origin +
     '/e/payments' +
     '?' +
-    objectToQueryString({ token }) +
+    objectToQueryString({ token, ...flattenKeys(rest) }) +
     url.hash
   );
   return { paymentIFrameUrl };
 };
 
-export default { createReceiverRedirect, createAddPaymentIFrameUrl };
+const createIDVIFrameUrl = function (opts) {
+  const { token, host, ...rest } = opts;
+  const url = new URL(host);
+  const idvIFrameUrl = (
+    url.origin +
+    '/e/idv' +
+    '?' +
+    objectToQueryString({ token, ...flattenKeys(rest) }) +
+    url.hash
+  );
+  return { idvIFrameUrl };
+};
+
+export default { createReceiverRedirect, createAddPaymentIFrameUrl, createIDVIFrameUrl };

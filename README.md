@@ -88,10 +88,12 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
 ```
 
 #### Types
+
 - "awaiting-config" => send your config
 ```
 { id: "awaiting-config" }
 ```
+
 - "credential-error" => bad token
 ```
 { 
@@ -103,6 +105,7 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
     }
 }
 ```
+
 - "add-payment-error" => failed to add card
 ```
 { 
@@ -115,6 +118,7 @@ User Canceled Flows Redirect to error url with a canceled result in the query st
     
 }
 ```
+
 - "add-payment-success" => card added to user
 ```
 { 
@@ -150,7 +154,7 @@ File: `index.js`
         }
     };
 
-    const { paymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token });
+    const { paymentIFrameUrl } = Palla.createAddPaymentIFrameUrl({ host, token, ...config });
 
     const iframe = document.createElement("iframe");
 
@@ -158,7 +162,7 @@ File: `index.js`
 
     const sendMessage = function _sendMessage(msg: any) {
 
-        return iframe?.contentWindow?.postMessage(msg, "*");
+        return iframe?.contentWindow?.postMessage(msg, new URL(paymentIFrameUrl).origin);
 
     };
 
@@ -195,7 +199,189 @@ File: `index.js`
 
     document.querySelector("body").appendChild(iframe);
 
-    const cleanUp = function _cleanUp() => {
+    const cleanUp = function _cleanUp() {
+
+        window.removeEventListener("message", messageHandler);
+
+        iframe.remove();
+
+    };
+
+})( window, document );
+```
+
+
+## Embedable Identity Verification IFrame
+
+### IFrame Events
+#### Structure
+```
+{
+    id: string,
+    message?: string,
+    payload?: <response data>
+}
+```
+
+#### Types
+
+- "awaiting-config" => send your config
+```
+{ id: "awaiting-config" }
+```
+
+- "credential-error" => bad token
+```
+{ 
+    id: "credential-error",
+    message: "credential issue"
+}
+```
+
+- "idv-success" => idv successful
+```
+{ 
+    id: "idv-success",
+    message: "idv success",
+    payload: {
+        "verifications": [
+            { "type": "KYC-US", "level": 2, "status": "complete" },
+            { "type": "KYC-US", "level": 1, "status": "complete" }
+        ],
+        "upgrades": [
+            { "type": "KYC-US", "level": 3, "status": "available" }
+        ]
+    }
+}
+```
+
+- "idv-fail => idv fail
+```
+{
+    "id": "idv-fail",
+    "message": "idv fail",
+    "payload": {
+        "error": {
+            "message": "accounts",
+            "rc": 22,
+            "resource": "accounts",
+            "description": "resource/missing"
+        }
+    }
+}
+```
+
+```
+{
+    "id": "idv-fail",
+    "message": "idv fail",
+    "payload": {
+        "error":{
+            "message": "identity data",
+            "rc": 22,
+            "resource": "identity",
+            "description": "resource/missing"
+        }
+    }
+}
+```
+```
+{
+    "id": "idv-fail",
+    "message": "idv fail",
+    "payload": {
+        "error":{
+            "message": "phone number",
+            "rc": 22,
+            "resource": "user_identifiers",
+            "description": "resource/missing"
+        }
+    }
+}
+```
+```
+{ 
+    id: "idv-fail,
+    message: "idv fail",
+    payload: {
+        error: {
+            verifications: [
+                { "type": "KYC-US", "level": 2, "status": "failed" },
+                { "type": "KYC-US", "level": 1, "status": "complete" }
+            ],
+            upgrades: [
+                { "type": "KYC-US", "level": 3, "status": "available" }
+            ]
+        }
+    }
+}
+```
+
+- "idv-cancel => idv cancel
+```
+{ 
+    id: "idv-cancel,
+    message: "idv cancel"
+}
+```
+
+#### Examples
+##### Browser
+File: `index.js`
+```js
+(function( window, document ){
+
+    const { idvIFrameUrl } = Palla.createIDVIFrameUrl({ host, token });
+
+    const iframe = document.createElement("iframe");
+
+    iframe.setAttribute("src", idvIFrameUrl);
+
+    const sendMessage = function _sendMessage(msg: any) {
+
+        return iframe?.contentWindow?.postMessage(msg, new URL(idvIFrameUrl).origin);
+
+    };
+
+    const messageHandler = function _messageHandler(message) {
+
+        if ( message.origin === host ) {
+
+            if ( message?.data?.id === "awaiting-config" ) {
+
+                sendMessage({ id: "config", payload: config });
+
+            } else if ( message?.data?.id === "idv-success" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "idv-fail" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "idv-cancel" ) {
+
+                // call cleanup
+                cleanUp();
+
+            } else if ( message?.data?.id === "credential-error" ) {
+
+                // call cleanup
+                cleanUp();
+
+            }
+
+        }
+
+    };
+
+    window.addEventListener("message", messageHandler);
+
+    document.querySelector("body").appendChild(iframe);
+
+    const cleanUp = function _cleanUp() {
 
         window.removeEventListener("message", messageHandler);
 
