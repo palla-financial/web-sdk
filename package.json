@@ -26,7 +26,8 @@
   "author": "engineering@palla.app",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/palla-financial/web-sdk/issues"
+    "url": "https://github.com/palla-financial/web-sdk/issues",
+    "email": "engineering@palla.app"
   },
   "homepage": "https://github.com/palla-financial/web-sdk#readme",
   "devDependencies": {
