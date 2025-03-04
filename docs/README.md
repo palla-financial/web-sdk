@@ -26,7 +26,7 @@ import Palla from 'palla-web-sdk';
 Generate your custom receiver signup link using the Palla SDK:
 ```js
 const { redirectUrl } = Palla.createReceiverRedirect({
-    flowUrl: 'https://mycompanysignup.palla.app',
+    flowUrl: 'https://mycompanysignup.palla.app/receiver/account',
     successUrl: 'https://www.partner.com/success?my-session-id=123',
     errorUrl: 'https://www.partner.com/error?my-session-id=123',
     accessToken: 'my-jwt-access-token',
