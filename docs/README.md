@@ -145,6 +145,7 @@ File: `index.js`
 (function( window, document ){
 
     const config = {
+        waitForConfig: false,
         copy: {
             paymentHeader: "Add Your Copy Here",
             paymentInfoText: "Add Your Copy Here"
