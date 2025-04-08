@@ -392,3 +392,15 @@ File: `index.js`
 
 })( window, document );
 ```
+
+Environments
+===
+
+Sandbox Flow URL:
+- `https://palla-embed-test.vercel.app`
+
+Live Test Flow URL:
+- `https://palla-embed-live-test.vercel.app`
+
+Production Flow URL:
+- `https://embed.palla.app`
