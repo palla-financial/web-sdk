@@ -172,7 +172,7 @@ File: `index.js`
         if ( message.origin === host ) {
 
             if ( message?.data?.id === "awaiting-config" ) {
-
+                // this condition is not necessary if waitForConfig is set to false
                 sendMessage({ id: "config", payload: config });
 
             } else if ( message?.data?.id === "add-payment-success" ) {
@@ -331,8 +331,10 @@ File: `index.js`
 File: `index.js`
 ```js
 (function( window, document ){
-
-    const { idvIFrameUrl } = Palla.createIDVIFrameUrl({ host, token });
+    const config = {
+        waitForConfig: false,
+    };
+    const { idvIFrameUrl } = Palla.createIDVIFrameUrl({ host, token, ...config });
 
     const iframe = document.createElement("iframe");
 
@@ -347,9 +349,9 @@ File: `index.js`
     const messageHandler = function _messageHandler(message) {
 
         if ( message.origin === host ) {
-
+            
             if ( message?.data?.id === "awaiting-config" ) {
-
+                // this condition is not necessary if waitForConfig is set to false
                 sendMessage({ id: "config", payload: config });
 
             } else if ( message?.data?.id === "idv-success" ) {
